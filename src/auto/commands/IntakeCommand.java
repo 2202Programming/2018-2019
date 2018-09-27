@@ -1,11 +1,11 @@
 package auto.commands;
 
-import auto.ICommand;
 import auto.IStopCondition;
+import edu.wpi.first.wpilibj.command.Command;
 import miyamoto.components.Intake;
 import robot.Global;
 
-public class IntakeCommand implements ICommand {
+public class IntakeCommand extends Command {
 	private IStopCondition stopCondition;
 	private Intake intake;
 	private double speed;
@@ -23,25 +23,28 @@ public class IntakeCommand implements ICommand {
 		this.holdSpeed = holdSpeed;
 	}
 
-	public void init() {
+	public void initialize() {
 		stopCondition.init();
 		intake = (Intake) Global.controlObjects.get("INTAKE");
 	}
 
-	public boolean run() {
+	public void execute() {
 		if (intake == null) {
-			init();
+			initialize();
 		}
 		intake.runIntake(speed);
-
-		return stopCondition.stopNow();
 	}
 
-	public void stop() {
+	public void end() {
 		intake.runIntake(holdSpeed);
 	}
 	
 	public String toString() {
 		return "IntakeCommand";
+	}
+
+	@Override
+	protected boolean isFinished() {
+		return stopCondition.stopNow();
 	}
 }
