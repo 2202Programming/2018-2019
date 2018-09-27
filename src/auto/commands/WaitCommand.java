@@ -1,9 +1,9 @@
 package auto.commands;
 
-import auto.ICommand;
+import edu.wpi.first.wpilibj.command.Command;
 import auto.IStopCondition;
 
-public class WaitCommand implements ICommand {
+public class WaitCommand extends Command {
 	IStopCondition stop;
 	/**
 	 * Creates a command that waits
@@ -15,17 +15,19 @@ public class WaitCommand implements ICommand {
 
 	
 	@Override
-	public void init() {
+	public void initialize() {
 		stop.init();
 	}
 
 	@Override
-	public boolean run() {
-		return stop.stopNow();
+	public void execute() {
+		return;
 	}
 
+
 	@Override
-	public void stop() {
+	protected boolean isFinished() {
+		return stop.stopNow();
 	}
 
 }
