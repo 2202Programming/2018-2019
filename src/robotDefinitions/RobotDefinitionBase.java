@@ -3,6 +3,8 @@ package robotDefinitions;
 import java.util.HashMap;
 import java.util.Map;
 
+import comms.LogWriter;
+import miyamoto.ReverseDrive;
 import robot.IControl;
 
 /**
@@ -57,6 +59,17 @@ public abstract class RobotDefinitionBase implements IRobotDefinition {
 	public Map<String, IControl> loadControlObjects() {
 		Map<String, IControl> temp=new HashMap<>();
 
+		return temp;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see robotDefinitions.IRobotDefinition#loadDefaultControlObjects()
+	 */
+	public final Map<String, IControl> loadDefaultControlObjects(){
+		Map<String, IControl> temp = new HashMap<>();
+		new ReverseDrive();
+		new LogWriter();
 		return temp;
 	}
 

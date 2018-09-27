@@ -8,28 +8,42 @@ import edu.wpi.first.wpilibj.Encoder;
 
 public class DistanceStopCondition implements IStopCondition {
 	private List<Encoder> enc;
-	private int duration;
-	
+	private int distance;
+
+	/**
+	 * StopCondition that uses an encoder count to inches conversion to stop
+	 * @param encoder	List of drive encoders
+	 * @param inches		Distance (in inches) at which to be stopped at
+	 */
 	public DistanceStopCondition(List<Encoder> encoder, int inches) {
 		enc = encoder;
-		duration = inches;
+		distance = inches;
 	}
 
 	public void init() {
-		for(Encoder x: enc){
+		for (Encoder x : enc) {
 			x.reset();
 		}
 	}
 
 	public boolean stopNow() {
-		int sum = 0;
-		for(Encoder x: enc){
-			//x.get() returns encoder counts
-			//encoder count -> inches will need to be put here
+		double sum = 0;
+		for (Encoder x : enc) {
 			sum += x.getDistance();
 		}
-		SmartWriter.putD("AUTO - AVG Encoder Count", sum/enc.size());
-		return (sum/enc.size()) > duration;
+		SmartWriter.putD("Current Distance Per Pulse", enc.get(0).getDistancePerPulse());
+		SmartWriter.putD("AUTO - AVG Encoder Count", sum / enc.size());
+		return Math.abs(sum / enc.size()) > distance;
+	}
+
+	public boolean stopNow1() { // Used for one encoder
+		double sum = 0;
+
+		sum += enc.get(1).getDistance();
+
+		SmartWriter.putD("Current Distance Per Pulse", enc.get(1).getDistancePerPulse());
+		SmartWriter.putD("AUTO - AVG Encoder Count", sum);
+		return Math.abs(sum) > distance;
 	}
 
 }

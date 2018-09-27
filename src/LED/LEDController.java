@@ -1,21 +1,23 @@
 package LED;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.Relay.Value;
+import miyamoto.MiyamotoControl;
+import robot.Global;
 import robot.IControl;
 
 public class LEDController extends IControl {
-	private Relay red = new Relay(1, Direction.kForward);
-	private Relay blue = new Relay(2, Direction.kForward);
-	private Relay green = new Relay(0, Direction.kForward);
+	private Relay red = new Relay(0, Direction.kForward);
+	private Relay blue = new Relay(1, Direction.kForward);
 
 	private DriverStation ds = DriverStation.getInstance();
+	private MiyamotoControl controller = (MiyamotoControl)Global.controllers;
+	private boolean flashing = false;
+	private boolean on = true;
+	private int timer = 0;
 
 	/**
 	 * Checks to see if we are on the red alliance
@@ -32,7 +34,6 @@ public class LEDController extends IControl {
 	private void resetLEDs() {
 		red.set(Value.kOff);
 		blue.set(Value.kOff);
-		green.set(Value.kOff);
 	}
 
 	/**
@@ -40,15 +41,13 @@ public class LEDController extends IControl {
 	 */
 	private void activateLEDs() {
 		// resetLEDs();
-		if (ds.getAlliance() == Alliance.Red){
+		if (isRedTeam()) {
+			blue.set(Value.kOff);
+			red.set(Value.kOn);
+		} else {
 			red.set(Value.kOff);
 			blue.set(Value.kOn);
 		}
-		else{
-			blue.set(Value.kOff);
-			red.set(Value.kOn);
-		}
-		green.set(Value.kOn);
 	}
 
 	public void robotInit() {
@@ -57,6 +56,32 @@ public class LEDController extends IControl {
 
 	public void teleopInit() {
 		activateLEDs();
+		on = true;
+		timer = 0;
+		flashing = false;
+	}
+	
+	public void teleopPeriodic(){
+		if(controller.reverseDrive()){
+			flashing = !flashing;
+			timer = 0;
+			on = true;
+		}
+		
+		if(flashing){
+			if(timer > 5){
+				on = !on;
+				timer = 0;
+			}else{
+				timer++;
+			}
+		}
+		
+		if(on){
+			activateLEDs();			
+		}else{
+			resetLEDs();
+		}
 	}
 
 	public void autonomousInit() {
