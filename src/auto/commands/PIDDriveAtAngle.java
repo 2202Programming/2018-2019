@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.command.Command;
 import input.DriveEncoders;
 import input.SensorController;
 import physicalOutput.motors.FakePIDMotor;
@@ -24,7 +25,7 @@ import robot.Global;
 import robot.Robot;
 import robotDefinitions.RobotDefinitionBase;
 
-public class PIDDriveAtAngle implements ICommand {
+public class PIDDriveAtAngle extends Command {
 
 	private IStopCondition stopCondition;
 	private IDrive drive;
@@ -82,7 +83,7 @@ public class PIDDriveAtAngle implements ICommand {
 		}
 	}
 
-	public void init() {
+	public void initialize() {
 		stopCondition.init();
 		controller.reset();
 		controller.setSetpoint(distance);
@@ -95,7 +96,7 @@ public class PIDDriveAtAngle implements ICommand {
 		initialOnTarget = Long.MAX_VALUE;
 	}
 
-	public boolean run() {
+	public void execute() {
 		SmartWriter.putS("TargetAngle driveAtAngle ", getError() + ", NavXAngle: " + navX.getYaw());
 
 		// Result from Distance PID Controller
@@ -118,7 +119,6 @@ public class PIDDriveAtAngle implements ICommand {
 //			System.out.println("Distance PID error: " + controller.getError() + "\n" + "Base motor speed: " + baseSpeed
 //					+ "\n" + "Angle PID error: " + getError() + "\n" + "PID offset: " + change);
 //		}
-		return PIDStop() || stopCondition.stopNow();
 	}
 
 	public boolean PIDStop() {
@@ -164,7 +164,7 @@ public class PIDDriveAtAngle implements ICommand {
 		angle = angleIn;
 	}
 
-	public void stop() {
+	public void end() {
 		controller.reset();
 		drive.setLeftMotors(0);
 		drive.setRightMotors(0);
@@ -175,6 +175,10 @@ public class PIDDriveAtAngle implements ICommand {
 		System.out.println("PIDDriveAtAngle Command Finished" + "\n" + "Encoder0 Distance| Counts: " + encoder0.get()
 				+ "\t" + "Inches: " + encoder0.getDistance() + "\n" + "Encoder1 Distance| Counts: " + encoder1.get()
 				+ "\t" + "Inches: " + encoder1.getDistance() + "\n" + "Final Angle: " + navX.getYaw());
+	}
+	
+	protected boolean isFinished() {
+		return PIDStop() || stopCondition.stopNow();
 	}
 
 	private void loadPIDValues(PIDDriveMode position) throws IOException {
