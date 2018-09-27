@@ -4,10 +4,11 @@ import auto.ICommand;
 import auto.IStopCondition;
 import drive.DriveControl;
 import drive.IDrive;
+import edu.wpi.first.wpilibj.command.Command;
 import robot.Global;
 import robotDefinitions.RobotDefinitionBase;
 
-public class DriveCommand implements ICommand {
+public class DriveCommand extends Command {
 
 	private IStopCondition stopCondition;
 	private IDrive drive;
@@ -31,18 +32,25 @@ public class DriveCommand implements ICommand {
 		drive.setDriveControl(DriveControl.EXTERNAL_CONTROL);
 	}
 
-	public boolean run() {
+	public boolean excecute() {
 		if (drive==null) {
 			init();
 		}
 		drive.setLeftMotors(speed);
 		drive.setRightMotors(speed);
-		return stopCondition.stopNow();
+		return isFinished();
 	}
 	
-	public void stop(){
+	public void end(){
 		drive.setLeftMotors(0);
 		drive.setRightMotors(0);
 		drive.setDriveControl(DriveControl.DRIVE_CONTROLLED);
 	}
+
+	@Override
+	protected boolean isFinished() {
+		// TODO Auto-generated method stub
+		return stopCondition.stopNow();
+	}
+	
 }
