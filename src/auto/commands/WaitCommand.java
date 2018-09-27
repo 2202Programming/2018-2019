@@ -24,10 +24,12 @@ public class WaitCommand extends Command {
 		return;
 	}
 
-
-	@Override
-	protected boolean isFinished() {
-		return stop.stopNow();
+	public void end() {
+		return;
 	}
 
+	@Override
+	public boolean isFinished() {
+		return stop.stopNow();
+	}
 }
