@@ -3,8 +3,6 @@ package robot;
 import comms.DebugMode;
 import comms.SmartWriter;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import miyamoto.Miyamoto;
-import miyamoto.NotVlad;
 import robotDefinitions.IRobotDefinition;
 import robotDefinitions.RobotName;
 
@@ -18,16 +16,16 @@ public class Robot extends IterativeRobot {
 	public static RobotName name;
 
 	public void robotInit() {
-		SmartWriter.putS("Robot State", "Initsing", DebugMode.DEBUG);
+		SmartWriter.putS("Robot State", "Initializing", DebugMode.DEBUG);
 		// String to say which robot we are using could later be made into a XML
 		// property getter // TODO Can we get this from the robot so
 		// it automatically knows what robot it
 		// is?
-		name = RobotName.MIYAMOTO;
+		name = RobotName.UNKNOWN;
 		SmartWriter.putS("RobotName", name.toString(), DebugMode.COMPETITION);
 		// Switch to decide which robot definition to use
 
-		robotDefinition = new Miyamoto();
+		robotDefinition = null;
 
 		// Load all the properties in the currently selected definition
 		Global.controlObjects = robotDefinition.loadControlObjects();
