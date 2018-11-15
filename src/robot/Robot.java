@@ -1,5 +1,6 @@
 package robot;
 
+import CyclopBot.CyclopBOT;
 import comms.DebugMode;
 import comms.SmartWriter;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -21,11 +22,11 @@ public class Robot extends IterativeRobot {
 		// property getter // TODO Can we get this from the robot so
 		// it automatically knows what robot it
 		// is?
-		name = RobotName.UNKNOWN;
+		name = RobotName.CYCLOPBOT;
 		SmartWriter.putS("RobotName", name.toString(), DebugMode.COMPETITION);
 		// Switch to decide which robot definition to use
 
-		robotDefinition = null;
+		robotDefinition = new CyclopBOT();
 
 		// Load all the properties in the currently selected definition
 		Global.controlObjects = robotDefinition.loadControlObjects();
