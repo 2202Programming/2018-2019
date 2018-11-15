@@ -21,11 +21,11 @@ public class Robot extends IterativeRobot {
 		// property getter // TODO Can we get this from the robot so
 		// it automatically knows what robot it
 		// is?
-		name = RobotName.UNKNOWN;
+		name = RobotName.BIGROBOT;
 		SmartWriter.putS("RobotName", name.toString(), DebugMode.COMPETITION);
 		// Switch to decide which robot definition to use
 
-		robotDefinition = null;
+		robotDefinition = BIGROBOT;
 
 		// Load all the properties in the currently selected definition
 		Global.controlObjects = robotDefinition.loadControlObjects();
